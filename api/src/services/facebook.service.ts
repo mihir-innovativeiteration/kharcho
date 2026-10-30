@@ -49,7 +49,7 @@ export class FacebookAuthService {
       },
     });
 
-    const data = await response.json();
+    const data = (await response.json()) as any;
 
     if (!response.ok || data.error) {
       const errorMsg = data.error?.message || 'Invalid Facebook access token';
