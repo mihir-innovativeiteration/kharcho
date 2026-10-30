@@ -38,11 +38,7 @@ class AuthApiClient {
     if (process.env.EXPO_PUBLIC_API_URL) {
       return process.env.EXPO_PUBLIC_API_URL;
     }
-    // Android emulator requires 10.0.2.2 to loop back to host machine
-    if (Platform.OS === 'android') {
-      return 'http://10.0.2.2:4000/api/v1';
-    }
-    return 'http://localhost:4000/api/v1';
+    return 'https://kharcho-1.onrender.com/api/v1';
   }
 
   setAccessToken(token: string | null) {
