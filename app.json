@@ -38,6 +38,16 @@
       "expo-web-browser",
       "expo-sqlite",
       "expo-notifications"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "asyncRoutes": {
+          "web": true
+        }
+      },
+      "eas": {
+        "projectId": "e0ab44ae-32a4-45de-8f41-08c219ee08f5"
+      }
+    }
   }
 }

@@ -34,10 +34,12 @@ export default function ResetPasswordScreen() {
   const [success, setSuccess] = useState(false);
   const [errors, setErrors] = useState<{ token?: string; password?: string; confirm?: string; general?: string }>({});
 
+  const effectiveToken = (token || params.token || '').trim();
+
   const validate = (): boolean => {
     const newErrors: typeof errors = {};
 
-    if (!token.trim()) {
+    if (!effectiveToken) {
       newErrors.token = 'Reset token is required';
     }
 
@@ -65,7 +67,7 @@ export default function ResetPasswordScreen() {
     setErrors({});
 
     try {
-      await authApi.resetPassword(token.trim(), newPassword);
+      await authApi.resetPassword(effectiveToken, newPassword);
       haptics.success();
       setSuccess(true);
     } catch (e: any) {

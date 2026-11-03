@@ -45,7 +45,7 @@ describe('Recurring Bills, EMIs, Subscriptions & Reminders API', () => {
           currency: 'INR',
           frequency: 'MONTHLY',
           interval: 1,
-          startDate: '2026-11-01T00:00:00.000Z',
+          startDate: '2026-11-15T00:00:00.000Z',
           reminderEnabled: true,
           reminderDaysBefore: 3,
         });
@@ -186,7 +186,7 @@ describe('Recurring Bills, EMIs, Subscriptions & Reminders API', () => {
           type: 'EXPENSE',
           amount: '20000.00',
           frequency: 'MONTHLY',
-          startDate: '2026-11-01T00:00:00.000Z',
+          startDate: '2026-11-15T00:00:00.000Z',
         });
 
       const ruleId = ruleRes.body.data.id;
@@ -224,7 +224,7 @@ describe('Recurring Bills, EMIs, Subscriptions & Reminders API', () => {
 
       // Next due date was advanced on rule
       const updatedRule = await mockPrisma.recurringRule.findUnique({ where: { id: ruleId } });
-      expect(updatedRule?.nextDueAt.toISOString()).toBe('2026-12-01T00:00:00.000Z');
+      expect(updatedRule?.nextDueAt.toISOString()).toBe('2026-12-15T00:00:00.000Z');
 
       // Next occurrence was automatically generated
       const nextOccurrences = await mockPrisma.recurringOccurrence.findMany({

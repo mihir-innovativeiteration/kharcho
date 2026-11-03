@@ -26,6 +26,7 @@ const envSchema = z.object({
   PASSWORD_RESET_BASE_URL: z.string().default('kharcho://reset-password'),
   EMAIL_VERIFICATION_BASE_URL: z.string().default('kharcho://verify-email'),
   GEMINI_API_KEY: z.string().optional(),
+  RESEND_API_KEY: z.string().optional(),
 });
 
 const parsed = envSchema.safeParse(process.env);

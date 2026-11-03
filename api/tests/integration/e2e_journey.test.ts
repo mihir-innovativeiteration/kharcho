@@ -50,6 +50,11 @@ describe('Kharcho End-to-End Full User Journey (12 Core Production Scenarios)', 
     // -------------------------------------------------------------
     // SCENARIO 2: Create Expense Transaction and Verify in History
     // -------------------------------------------------------------
+    const now = new Date();
+    const currentTxDate = now.toISOString();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999).toISOString();
+
     const txExpenseRes = await request(app)
       .post('/api/v1/transactions')
       .set('Authorization', `Bearer ${userToken}`)
@@ -60,7 +65,7 @@ describe('Kharcho End-to-End Full User Journey (12 Core Production Scenarios)', 
         description: 'Dinner at Bawarchi Restaurant',
         categoryId: 'cat_food_dining',
         paymentMethodId: 'pm_upi',
-        transactionDate: '2026-10-28T20:00:00.000Z',
+        transactionDate: currentTxDate,
       });
 
     expect(txExpenseRes.status).toBe(201);
@@ -81,7 +86,7 @@ describe('Kharcho End-to-End Full User Journey (12 Core Production Scenarios)', 
     // SCENARIO 3: Verify Dashboard & Financial Summary Update
     // -------------------------------------------------------------
     const summaryRes1 = await request(app)
-      .get('/api/v1/finance/summary?startDate=2026-10-01T00:00:00.000Z&endDate=2026-10-31T23:59:59.999Z')
+      .get(`/api/v1/finance/summary?startDate=${startOfMonth}&endDate=${endOfMonth}`)
       .set('Authorization', `Bearer ${userToken}`);
 
     expect(summaryRes1.status).toBe(200);
@@ -102,13 +107,13 @@ describe('Kharcho End-to-End Full User Journey (12 Core Production Scenarios)', 
         description: 'Monthly Salary Credit',
         categoryId: 'cat_salary',
         paymentMethodId: 'pm_bank_transfer',
-        transactionDate: '2026-10-28T09:00:00.000Z',
+        transactionDate: currentTxDate,
       });
 
     expect(txIncomeRes.status).toBe(201);
 
     const summaryRes2 = await request(app)
-      .get('/api/v1/finance/summary?startDate=2026-10-01T00:00:00.000Z&endDate=2026-10-31T23:59:59.999Z')
+      .get(`/api/v1/finance/summary?startDate=${startOfMonth}&endDate=${endOfMonth}`)
       .set('Authorization', `Bearer ${userToken}`);
 
     expect(summaryRes2.status).toBe(200);

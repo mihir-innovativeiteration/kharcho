@@ -269,8 +269,8 @@ class AuthApiClient {
     }
   }
 
-  async forgotPassword(email: string): Promise<{ message: string }> {
-    return this.request<{ message: string }>('/auth/forgot-password', {
+  async forgotPassword(email: string): Promise<{ message: string; resetToken?: string }> {
+    return this.request<{ message: string; resetToken?: string }>('/auth/forgot-password', {
       method: 'POST',
       body: JSON.stringify({ email }),
     }, false);

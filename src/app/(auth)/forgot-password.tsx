@@ -28,6 +28,7 @@ export default function ForgotPasswordScreen() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [resetToken, setResetToken] = useState<string | null>(null);
   const [error, setError] = useState<string | undefined>();
 
   const handleSubmit = async () => {
@@ -41,11 +42,13 @@ export default function ForgotPasswordScreen() {
     setError(undefined);
 
     try {
-      await authApi.forgotPassword(email.trim());
+      const res = await authApi.forgotPassword(email.trim());
       haptics.success();
+      if (res.resetToken) {
+        setResetToken(res.resetToken);
+      }
       setSubmitted(true);
     } catch (e: any) {
-      // Still show success to prevent account enumeration if desired, or error
       haptics.error();
       setError(e.message || 'Unable to process request');
     } finally {
@@ -143,9 +146,23 @@ export default function ForgotPasswordScreen() {
             </Text>
 
             <Button
+              title="Set New Password Now"
+              onPress={() =>
+                router.push({
+                  pathname: '/(auth)/reset-password',
+                  params: resetToken ? { token: resetToken } : {},
+                })
+              }
+              variant="primary"
+              size="md"
+              fullWidth
+              style={{ marginTop: 16 }}
+            />
+
+            <Button
               title={t('auth.backToSignIn')}
               onPress={() => router.replace('/(auth)/sign-in')}
-              variant="primary"
+              variant="ghost"
               size="md"
               fullWidth
               style={styles.backBtn}

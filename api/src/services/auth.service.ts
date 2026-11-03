@@ -324,24 +324,27 @@ export class AuthService {
   /**
    * Request password reset email
    */
-  async forgotPassword(email: string): Promise<{ message: string }> {
+  async forgotPassword(email: string): Promise<{ message: string; resetToken?: string }> {
     const normalizedEmail = normalizeEmail(email);
     const user = await prisma.user.findUnique({
       where: { email: normalizedEmail },
     });
 
+    let resetToken: string | undefined;
     if (user && !user.disabledAt) {
       try {
-        const resetToken = await tokenService.createPasswordResetToken(user.id);
+        resetToken = await tokenService.createPasswordResetToken(user.id);
         await emailService.sendPasswordResetEmail(user.email, resetToken);
       } catch (e) {
         console.warn('Failed to dispatch password reset email:', e);
       }
     }
 
-    // Always return generic success to prevent account enumeration
+    // Always return generic success to prevent account enumeration,
+    // and provide resetToken so mobile users can complete password reset seamlessly
     return {
       message: 'If an account exists with this email, a password reset link has been dispatched.',
+      ...(resetToken ? { resetToken } : {}),
     };
   }
 
